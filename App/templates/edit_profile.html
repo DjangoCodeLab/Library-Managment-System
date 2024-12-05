@@ -1,0 +1,45 @@
+{% extends "master.html" %}
+
+{% block title %}
+Edit Profile
+{% endblock %}
+
+{% block body %}
+
+<div class="mx-auto col-6 my-5">
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if messages %}
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{message.tags}}" {% endif %} role="alert">
+            {{message}}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="mb-3">
+            <label for="profile_picture" class="form-label">Profile Picture</label>
+            <input type="file" name="profile_picture" class="form-control" id="exampleInputEmail1"
+                aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Bio</label>
+            <div class="form-floating">
+                <textarea name="bio" class="form-control" placeholder="Leave a comment here"
+                    id="floatingTextarea">{{profile.bio}}</textarea>
+                <label for="floatingTextarea">@Bio</label>
+            </div>
+        </div>
+        <label for="role" class="form-label">Role:</label>
+        <select id="role" name="role" class="form-select" aria-label="Default select example">
+            <option value="Member" {% if profile.role == "Member" %} selected {% endif %}>Member</option>
+            <option value="Librarian" {% if profile.role == "Librarian" %} selected {% endif %}>Librarian</option>
+            <option value="Admin" {% if profile.role == "Admin" %} selected {% endif %}>Admin</option>
+        </select>
+        
+    
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

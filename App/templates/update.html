@@ -1,0 +1,36 @@
+{% extends "master.html" %}
+
+
+{% block body %}
+<div class="mx-auto col-6">
+    <h1>{{book.title}}</h1>
+
+    <form method = "POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Title</label>
+                <input type="text" name="title" class="form-control" id="exampleInputEmail1" value="{{book.title}}"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Authors</label>
+                <input type="text" name="author" class="form-control" id="exampleInputEmail1" value="{{book.author}}"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Publisher</label>
+                <input type="text" name="publisher" class="form-control" id="exampleInputEmail1" value="{{book.publisher}}"
+                    aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Price</label>
+                <input type="number" name="price" class="form-control" id="exampleInputEmail1" value="{{book.price}}"
+                    aria-describedby="emailHelp">
+            </div>
+    
+    
+            <button type="submit" class="btn btn-success form-control">Update</button>
+    </form>
+</div>
+{% endblock %}

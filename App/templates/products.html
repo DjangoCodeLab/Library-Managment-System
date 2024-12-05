@@ -1,0 +1,163 @@
+{% extends "master.html" %}
+
+{% block body %}
+<div class="container p-3">
+  <!-- Filters -->
+  <form method="GET" id="filterForm" class="mb-3">
+    <div class="table-responsive">
+      <table class="table table-bordered mt-3">
+        <thead>
+          <tr class="text-center">
+            <th>#</th>
+            <th>
+
+              <input type="search" name="book_id" class="form-control form-control-sm search-input"
+                placeholder="Book ID">
+            </th>
+            <th>
+
+              <input type="search" name="title" class="form-control form-control-sm search-input" placeholder="Title">
+            </th>
+            <th>
+
+              <input type="search" name="author" class="form-control form-control-sm search-input" placeholder="Author">
+            </th>
+            <th>
+
+              <select class="form-select search-input" name="average_rating">
+                <option value="" selected>Rating</option>
+                <option value="1">2 to 3</option>
+                <option value="2">3 to 4</option>
+                <option value="3">4 to 5</option>
+              </select>
+            </th>
+            <th>
+
+              <input type="search" name="language_code" class="form-control form-control-sm search-input"
+                placeholder="Language">
+            </th>
+            <th>
+
+              <input type="search" name="publication_date" class="form-control form-control-sm search-input"
+                placeholder=" Publication Date">
+            </th>
+            <th>
+
+              <input type="search" name="publisher" class="form-control form-control-sm search-input"
+                placeholder="Publisher">
+            </th>
+            <th>
+
+              <select class="form-select search-input" name="price">
+                <option value="" selected>Price</option>
+                <option value="1">100-250</option>
+                <option value="2">250-500</option>
+                <option value="3">500-750</option>
+                <option value="4">750-1000</option>
+              </select>
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </form>
+
+  <!-- Results Table -->
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr class="text-center">
+          <th>#</th>
+          <th>Book ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Rating</th>
+          <th>Language</th>
+          <th>Publication Date</th>
+          <th>Publisher</th>
+          <th>Price</th>
+          {% if request.user.is_authenticated and request.user.username == "user" %}
+          <th>Update</th>
+          <th>Delete</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ book.book_id }}</td>
+          <td> {{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.average_rating }}</td>
+          <td>{{ book.language_code }}</td>
+          <td>{{ book.publication_date }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.price }}</td>
+          {% if request.user.is_authenticated and request.user.username == "user" %}
+          <td><a href="{% url 'update' book.id %}" class="text-decoration-none btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg></a></td>
+          <td><a href="{% url 'delete' book.id %}" class="text-decoration-none btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+          </svg></a></td>
+          {% endif %}
+
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center">No results found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if books.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&{{ query_params }}">First</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ books.previous_page_number }}&{{ query_params }}">Previous</a>
+      </li>
+      {% endif %}
+      <li class="page-item disabled">
+        <span class="page-link">{{ books.number }} of {{ books.paginator.num_pages }}</span>
+      </li>
+      {% if books.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ books.next_page_number }}&{{ query_params }}">Next</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ books.paginator.num_pages }}&{{ query_params }}">Last</a>
+      </li>
+      {%else%}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&{{ query_params }}">First</a>
+      </li>
+      
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<!-- JavaScript -->
+<script>
+  // Auto-submit the form when any filter input changes
+  document.addEventListener("DOMContentLoaded", function () {
+    const filterForm = document.getElementById("filterForm");
+    const inputs = document.querySelectorAll(".search-input");
+
+    inputs.forEach(input => {
+      input.addEventListener("change", function () {
+        filterForm.submit();
+      });
+    });
+  });
+</script>
+{% endblock %}
