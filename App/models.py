@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-
+from django.conf import settings
 
 
 
@@ -35,7 +35,31 @@ class Book(models.Model):
     publication_date = models.DateField()
     publisher = models.CharField(max_length=500)
     price = models.IntegerField(default=100)
+    stock = models.PositiveIntegerField(default=100)
 
 
     def __str__(self):
         return self.title
+    
+
+class Cart(models.Model):
+    user = models.ForeignKey(User,on_delete= models.CASCADE,null = True,blank = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Cart {self.id} for {self.user}"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart,on_delete = models.CASCADE,related_name='items')
+    book = models.ForeignKey(Book,on_delete = models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+
+    def __str__(self):
+        return f"{self.quantity} X {self.book.title}"
+    
+    @property
+    def total_price(self):
+        return self.book.price * self.quantity
+    

@@ -1,6 +1,6 @@
 import requests
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from App.models import *
 from functools import wraps
@@ -76,8 +76,12 @@ def products(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
+    
     # Prepare context and render
-    context = {'books': page_obj}
+    context = {
+        'books': page_obj,
+        
+        }
     return render(request, 'products.html', context)
 
 
@@ -212,3 +216,28 @@ def delete(request,id):
     book.delete()
     messages.info(request, "Data Sucessfully delete")
     return redirect('/products')
+
+
+def cart_details(request):
+    cart = Cart.objects.get(user = request.user)
+    total = sum(item.total_price for item in cart.items.all())
+    total_quantity = sum(item.quantity for item in cart.items.all())
+    context = {
+        'cart':cart,
+        'total':total,
+        'total_quantity':total_quantity
+    }
+
+    return render(request, 'Cart.html',context)
+
+
+def add_to_cart(request,book_id):
+    book = get_object_or_404(Book,id = book_id)
+    cart,created = Cart.objects.get_or_create(user = request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart = cart, book = book)
+
+    if not created:
+        cart_item.quantity+=1
+        cart_item.save()
+
+    return redirect('products')

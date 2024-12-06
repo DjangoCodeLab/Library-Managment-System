@@ -41,6 +41,7 @@ def saveData():
 
             # Handle price (optional randomization)
             price = random.randint(100, 1000)
+            stock = random.randint(10,150)
 
             # Create and save the book object
             try:
@@ -52,7 +53,8 @@ def saveData():
                     language_code=i['language_code'],
                     publication_date=formatted_date,
                     publisher=i['publisher'],
-                    price=price
+                    price=price,
+                    stock=stock
                 )
             except Exception as e:
                 print(f"Error saving book {i['title']}: {e}")
