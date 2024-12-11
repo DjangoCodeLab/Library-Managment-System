@@ -4,5 +4,3 @@ from App.models import *
 
 admin.site.register(Book)
 admin.site.register(Profile)
-admin.site.register(Cart)
-admin.site.register(CartItem)

@@ -10,6 +10,4 @@ urlpatterns = [
     path('edit-profile/',edit_profile,name = 'edit_profile'),
     path('update/<id>',update_book , name = 'update'),
     path('delete/<id>',delete , name = 'delete'),
-    path('cart', cart_details,name = 'cart'),
-    path('addCart/<book_id>',add_to_cart, name = 'addCart')
 ]

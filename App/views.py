@@ -217,27 +217,3 @@ def delete(request,id):
     messages.info(request, "Data Sucessfully delete")
     return redirect('/products')
 
-
-def cart_details(request):
-    cart = Cart.objects.get(user = request.user)
-    total = sum(item.total_price for item in cart.items.all())
-    total_quantity = sum(item.quantity for item in cart.items.all())
-    context = {
-        'cart':cart,
-        'total':total,
-        'total_quantity':total_quantity
-    }
-
-    return render(request, 'Cart.html',context)
-
-
-def add_to_cart(request,book_id):
-    book = get_object_or_404(Book,id = book_id)
-    cart,created = Cart.objects.get_or_create(user = request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart = cart, book = book)
-
-    if not created:
-        cart_item.quantity+=1
-        cart_item.save()
-
-    return redirect('products')
